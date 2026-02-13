@@ -1,14 +1,14 @@
 # Dockerfile for Next.js app with Prisma
 
 FROM node:20-alpine AS base
-
-# Install dependencies only when needed
-FROM base AS deps
 RUN apk add --no-cache libc6-compat openssl
 WORKDIR /app
 
-# Install dependencies based on the preferred package manager
+# Install dependencies only when needed
+FROM base AS deps
 COPY package.json package-lock.json* ./
+
+# Install dependencies based on the preferred package manager
 RUN npm ci
 
 # Rebuild the source code only when needed
