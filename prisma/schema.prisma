@@ -1,0 +1,71 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-arm64-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              Int        @id @default(autoincrement())
+  username        String     @unique
+  email           String     @unique
+  password        String
+  role            String     @default("USER")
+  profileImageUrl String?
+  favorites       Favorite[]
+}
+
+model Favorite {
+  id       Int    @id @default(autoincrement())
+  userId   Int
+  recipeId Int
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recipe   Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, recipeId])
+}
+
+model Setting {
+  key   String @id
+  value String
+}
+
+model Category {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now())
+}
+
+model Recipe {
+  id           Int        @id @default(autoincrement())
+  title        String
+  description  String
+  ingredients  String // Stored as newline separated text
+  instructions String // Stored as newline separated text
+  imageUrl     String?
+  category     String     @default("Other")
+  createdAt    DateTime   @default(now())
+  favorites    Favorite[]
+}
+
+model GeneratedRecipe {
+  id           Int      @id @default(autoincrement())
+  title        String
+  description  String
+  ingredients  String
+  instructions String
+  imageUrl     String?
+  category     String   @default("Other")
+  country      String
+  dishType     String?
+  status       String   @default("PENDING") // PENDING, APPROVED, REJECTED
+  userId       Int
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}

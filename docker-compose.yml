@@ -1,0 +1,18 @@
+services:
+  app:
+    build: .
+    restart: always
+    networks:
+      - web
+    environment:
+      - DATABASE_URL=file:/app/data/dev.db
+      - SECRET_COOKIE_PASSWORD=${SECRET_COOKIE_PASSWORD}
+    volumes:
+      - ./data:/app/data
+    labels:
+      caddy: kochen.hackerwerkstatt.de
+      caddy.reverse_proxy: "{{upstreams 3000}}"
+
+networks:
+  web:
+    external: true
