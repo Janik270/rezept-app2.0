@@ -25,6 +25,9 @@ COPY . .
 # Generate Prisma Client
 RUN npx prisma generate
 
+# Create dummy database schema for prerendering
+RUN npx prisma db push --skip-generate
+
 # Build the application
 RUN npm run build
 
