@@ -6,7 +6,7 @@ services:
       - web
     environment:
       - DATABASE_URL=file:/app/data/dev.db
-      - SECRET_COOKIE_PASSWORD=${SECRET_COOKIE_PASSWORD}
+      - SECRET_COOKIE_PASSWORD=${SECRET_COOKIE_PASSWORD:-default_password_at_least_32_characters_long_change_this_in_production}
     volumes:
       - ./data:/app/data
     labels:

@@ -20,6 +20,9 @@ COPY . .
 # Generate Prisma Client
 RUN npx prisma generate
 
+# Set DATABASE_URL for build time (needed for Next.js prerendering)
+ENV DATABASE_URL="file:./dev.db"
+
 # Build the application
 RUN npm run build
 
