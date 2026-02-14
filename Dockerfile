@@ -14,14 +14,16 @@ RUN npm ci
 # Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
+
+# Set DATABASE_URL for build time (needed for Next.js prerendering)
+ARG DATABASE_URL="file:./dev.db"
+ENV DATABASE_URL=${DATABASE_URL}
+
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 # Generate Prisma Client
 RUN npx prisma generate
-
-# Set DATABASE_URL for build time (needed for Next.js prerendering)
-ENV DATABASE_URL="file:./dev.db"
 
 # Build the application
 RUN npm run build
